@@ -213,25 +213,35 @@ elif model == "Precedent Transactions":
     st.subheader("📊 Load Historical M&A Deal Data")
 
     uploaded_file = st.file_uploader("Upload Precedent Transactions CSV", type=["csv"])
-    
-    GITHUB_RAW_URL = "https://raw.githubusercontent.com/<your-username>/<your-repo>/main/data/precedent_transactions.csv"
 
     @st.cache_data
     def load_precedent_data(upload=None):
-        if upload:
-            df = pd.read_csv(upload)
-        else:
-            try:
-                df = pd.read_csv(GITHUB_RAW_URL)
-            except:
-                df = pd.DataFrame()
-        df.columns = df.columns.str.strip().str.lower()
-        return df
+        try:
+            if upload:
+                df = pd.read_csv(upload)
+            else:
+                df = pd.read_csv("precedent_transactions.csv")
+
+            # Fix encoding issues and clean columns
+            df.columns = df.columns.str.encode('utf-8').str.decode('utf-8')
+            df.columns = df.columns.str.strip().str.lower()
+
+            # Optional: Rename messed-up columns from Excel exports
+            df.rename(columns={
+                "ev (â‚¹ cr)": "ev (₹ cr)",
+                "revenue (â‚¹ cr)": "revenue (₹ cr)",
+                "ebitda (â‚¹ cr)": "ebitda (₹ cr)"
+            }, inplace=True)
+
+            return df
+        except Exception as e:
+            st.error(f"❌ Error loading data: {e}")
+            return pd.DataFrame()
 
     df = load_precedent_data(uploaded_file)
 
     if df.empty or "sector" not in df.columns:
-        st.error("❌ Could not load valid data. Please check the uploaded file or GitHub CSV.")
+        st.error("❌ Could not load valid data. Please check the uploaded file or ensure 'sector' column is present.")
     else:
         st.dataframe(df, use_container_width=True)
 
@@ -276,7 +286,6 @@ elif model == "Precedent Transactions":
                 st.metric("Equity Value", f"₹{equity_value:,.2f} Cr")
                 st.metric("Intrinsic Value / Share", f"₹{intrinsic_value_per_share:,.2f}")
 
-                # Download CSV
                 output_df = pd.DataFrame({
                     "Sector": [selected_sector],
                     "Median EV/Revenue": [median_ev_rev],
@@ -296,6 +305,7 @@ elif model == "Precedent Transactions":
                     output_df.to_csv(index=False).encode(),
                     "precedent_transactions_valuation.csv"
                 )
+
 elif model == "SOTP Valuation":
     import streamlit as st
     import pandas as pd

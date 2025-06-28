@@ -1,33 +1,27 @@
 import streamlit as st
 
-# ──────────────────────────────────────
 st.set_page_config(page_title="AlphaStack - Valuation Models", layout="wide")
+
 st.title("🧠 AlphaStack Valuation Suite")
-st.markdown("Choose a valuation method below to get started:")
+st.markdown("Choose a valuation model below and open the corresponding page from the sidebar 👇")
 
-# ──────────────────────────────────────
-# ℹ️ Simple Grid with Buttons
-
+# Simple Display Without Linking
 st.markdown("---")
-col1, col2 = st.columns(2)
 
-with col1:
-    if st.button("📈 Discounted Cash Flow (DCF)"):
-        st.switch_page("pages/1_DCF.py")
+models = {
+    "📈 Discounted Cash Flow (DCF)": "1_DCF.py",
+    "📊 Comparable Companies": "2_Comps.py",
+    "💼 Precedent Transactions": "3_Precedent_Transactions.py",
+    "📐 SOTP Valuation": "4_SOTP.py",
+    "🔬 Sensitivity Analysis": "5_Sensitivity.py",
+    "🎲 Monte Carlo DCF": "6_MonteCarlo.py"
+}
 
-    if st.button("💼 Precedent Transactions"):
-        st.switch_page("pages/3_Precedent_Transactions.py")
+for icon, filename in models.items():
+    st.markdown(f"### {icon}")
+    st.markdown(f"Open from sidebar: **pages/{filename}**")
+    st.markdown("---")
 
-    if st.button("📐 SOTP Valuation"):
-        st.switch_page("pages/4_SOTP.py")
+st.caption("📁 This is a simplified navigation for Streamlit Cloud. Use the sidebar to access different models.")
 
-with col2:
-    if st.button("📊 Comparable Companies"):
-        st.switch_page("pages/2_Comps.py")
-
-    if st.button("🔬 Sensitivity Analysis"):
-        st.switch_page("pages/5_Sensitivity.py")
-
-    if st.button("🎲 Monte Carlo DCF"):
-        st.switch_page("pages/6_MonteCarlo.py")
 

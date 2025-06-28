@@ -36,8 +36,6 @@ with col2:
                "See how changes in assumptions affect valuation metrics.",
                "pages/5_Sensitivity.py")
     model_card("🎲", "Monte Carlo Simulation",
-               "Run 1000+ simulations on uncertain inputs to generate valuation distributions.",
+               "Stress test assumptions by simulating 1000 DCFs with random values.",
                "pages/6_MonteCarlo.py")
 
-
-# You can add more models below in future
